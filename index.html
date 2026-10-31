@@ -1,0 +1,745 @@
+<!doctype html><html lang="ca"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#100D27"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Teclat LaTeX"><link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><style id="teclat-brand-theme">
+:root,:root:not([data-theme='light']),:root[data-theme='dark'] {
+  color-scheme:dark;
+  --bg:#100d27; --surface:#1b1640; --ink:#fbf8ff; --muted:#c1b8d7;
+  --line:#4b416c; --accent:#b8f84f; --accent-ink:#15200a; --accent-soft:#35304f;
+  --key-press:#312a55; --ok:#3fe4d2; --font-display:'SF Pro Rounded','Trebuchet MS',system-ui,sans-serif;
+}
+body {
+  background:radial-gradient(ellipse at 7% 0%,rgba(255,97,199,.14),transparent 30rem),
+    radial-gradient(ellipse at 94% 4%,rgba(63,228,210,.11),transparent 27rem),var(--bg);
+}
+body::before { background:var(--bg); }
+.composer { background:linear-gradient(180deg,rgba(16,13,39,.97) 72%,rgba(16,13,39,0));backdrop-filter:blur(16px); }
+.compose-card {
+  background:linear-gradient(145deg,rgba(35,28,76,.98),rgba(24,20,57,.98));
+  border-radius:22px;padding:14px;box-shadow:0 18px 48px rgba(4,2,20,.34),inset 0 1px rgba(255,255,255,.06);
+}
+.brand-lockup { display:flex;align-items:center;gap:11px;min-width:0; }
+.brand-icon { display:block;width:52px;height:52px;flex:0 0 52px;border-radius:15px;box-shadow:0 0 24px rgba(255,97,199,.17); }
+.brand-copy { min-width:0; }
+h1 { font-family:var(--font-display);font-size:clamp(20px,3vw,25px);line-height:1.1;letter-spacing:-.035em;font-weight:800; }
+.brand-tag { margin:4px 0 0;color:#3fe4d2;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase; }
+textarea#ta { min-height:84px;border-color:#625784;border-radius:15px;background:#100d27;box-shadow:inset 0 2px 10px rgba(0,0,0,.18); }
+textarea#ta:focus-visible,input#q:focus-visible,select:focus-visible,.btn:focus-visible,.key:focus-visible,.chip:focus-visible,.seg button:focus-visible {
+  outline:3px solid #3fe4d2;outline-offset:2px;
+}
+.btn { min-height:46px;border-radius:13px;background:#26204e;transition:transform .15s ease,border-color .15s ease,background .15s ease; }
+.btn:hover { border-color:#3fe4d2;transform:translateY(-1px); }
+.btn.primary { background:#b8f84f;color:#15200a;border-color:#b8f84f;font-weight:800;box-shadow:0 5px 18px rgba(184,248,79,.18); }
+.preview { min-height:72px;border-color:#716590;border-radius:15px;background:rgba(16,13,39,.76); }
+.preview svg { max-width:min(100%,720px); }
+.integration { border-top-color:rgba(193,184,215,.2);padding-top:12px; }
+.integration select { border-radius:13px;background:#171333; }
+.output-preview { background:#100d27;color:#e5dcff;border-color:#40365f;border-radius:12px; }
+input#q { min-height:48px;border-radius:14px;background:#1b1640; }
+input#q::placeholder { color:#a69cbe; }
+.chip[aria-selected='true'] { background:#3fe4d2;color:#082e31;border-color:#3fe4d2;font-weight:800;box-shadow:0 5px 16px rgba(63,228,210,.15); }
+h2 { font-family:var(--font-display);color:#3fe4d2;font-weight:800;letter-spacing:.1em; }
+.key { min-height:74px;border-color:#3d355f;border-radius:15px;background:linear-gradient(150deg,#211b4a,#19153a);box-shadow:inset 0 1px rgba(255,255,255,.045),0 5px 12px rgba(5,3,22,.15);transition:transform .14s ease,border-color .14s ease; }
+.key:hover { border-color:#ff61c7;transform:translateY(-2px); }
+.glyph { color:#b8f84f; }
+.key:nth-child(5n+2) .glyph { color:#3fe4d2; }
+.key:nth-child(5n+3) .glyph { color:#ff61c7; }
+.key:nth-child(5n+4) .glyph { color:#ffd56a; }
+.toast { background:#b8f84f;color:#15200a;font-weight:800;box-shadow:0 9px 25px rgba(0,0,0,.3); }
+.foot code { color:#3fe4d2; }
+@media(max-width:640px) {
+  .compose-card { padding:11px;border-radius:18px; }
+  .brand-icon { width:46px;height:46px;flex-basis:46px;border-radius:13px; }
+  .top-actions { width:100%;justify-content:flex-end; }
+  .integration { grid-template-columns:1fr; }
+  .integration-actions .btn { flex:1; }
+  .btn.primary { margin-left:0; }
+  .keys { grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:7px; }
+  .key { min-height:70px; }
+}
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; } }
+</style>
+</head><body>
+<title>Teclat LaTeX · Editor científic</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=STIX+Two+Text:wght@400;600&display=swap">
+<style>
+  /* Disseny: tauler de tecles sota una barra fixa de redacció; tot cap a l'abast del polze a l'iPad. */
+  :root {
+    --bg: #EEF2F1;
+    --surface: #FFFFFF;
+    --ink: #16201E;
+    --muted: #56655F;
+    --line: #D2DBD8;
+    --accent: #1D5E8C;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #DAE8F1;
+    --key-press: #E3EDF3;
+    --ok: #1F7A55;
+    --font-body: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    --font-math: 'STIX Two Text', 'STIXGeneral', 'Cambria Math', 'Times New Roman', serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121819; --surface: #1A2224; --ink: #E6ECEA; --muted: #93A19D; --line: #2B3638;
+      --accent: #7DB7E0; --accent-ink: #0E1A21; --accent-soft: #223540; --key-press: #263338; --ok: #6FCB9F;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121819; --surface: #1A2224; --ink: #E6ECEA; --muted: #93A19D; --line: #2B3638;
+    --accent: #7DB7E0; --accent-ink: #0E1A21; --accent-soft: #223540; --key-press: #263338; --ok: #6FCB9F;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.4;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0 24px;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+    background: var(--bg); z-index: 10;
+  }
+  .wrap { max-width: 980px; margin-inline: auto; }
+
+  /* Barra de redacció */
+  .composer {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+    background: var(--bg); padding-block: 12px 10px;
+  }
+  .compose-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .compose-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  h1 { font-size: 17px; margin: 0; letter-spacing: 0.01em; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .seg button {
+    font: inherit; font-size: 14px; border: 0; background: transparent; color: var(--muted);
+    padding: 8px 12px; min-height: 40px; cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--ink); font-weight: 700; }
+  textarea#ta {
+    width: 100%; min-height: 76px; resize: none; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--bg); color: var(--ink); font-family: var(--font-mono); font-size: 17px; line-height: 1.5;
+    padding: 10px 12px;
+  }
+  textarea#ta:focus-visible, input#q:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    font: inherit; font-size: 15px; min-height: 44px; min-width: 44px; padding: 0 14px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer;
+  }
+  .btn:active { background: var(--key-press); }
+  .btn:focus-visible, .key:focus-visible, .chip:focus-visible, .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; margin-left: auto; padding: 0 22px; }
+  .btn.primary:active { filter: brightness(0.92); }
+  .preview {
+    border: 1px dashed var(--line); border-radius: 10px; padding: 8px 12px; min-height: 64px; max-height: 160px;
+    overflow: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    color: var(--ink); background: var(--surface); font-size: 15px;
+  }
+  .preview svg { max-width: none; }
+  .preview .ph { color: var(--muted); font-size: 14px; }
+  .preview .warn { color: var(--muted); font-size: 12px; align-self: flex-start; }
+  .hint { margin: 0; font-size: 13px; color: var(--muted); min-height: 1.4em; }
+  .integration { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; align-items:end; border-top:1px solid var(--line); padding-top:10px; }
+  .integration label { display:flex; flex-direction:column; gap:5px; color:var(--muted); font-size:13px; font-weight:700; }
+  .integration select { min-height:44px; width:100%; padding:0 12px; border:1px solid var(--line); border-radius:10px; color:var(--ink); background:var(--surface); font:inherit; }
+  .integration-actions { display:flex; gap:8px; flex-wrap:wrap; }
+  .integration-note { grid-column:1/-1; color:var(--muted); font-size:13px; margin:0; }
+  .output-preview { grid-column:1/-1; background:var(--bg); color:var(--ink); border:1px solid var(--line); border-radius:9px; padding:8px 10px; font:12px/1.45 var(--font-mono); overflow-wrap:anywhere; max-height:75px; overflow:auto; }
+  .top-actions { display:flex; gap:8px; align-items:center; }
+  .install { display:none; }
+  @media(max-width:520px) { .integration {grid-template-columns:1fr;} .integration-actions .btn {flex:1;} .btn.primary {margin-left:0;} .compose-head {align-items:flex-start;} }
+
+  /* Cerca i pestanyes */
+  input#q {
+    width: 100%; min-height: 46px; font: inherit; font-size: 16px; padding: 0 14px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink); margin-top: 6px;
+  }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding-block: 10px 4px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto; font: inherit; font-size: 15px; min-height: 42px; padding: 0 16px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; white-space: nowrap;
+  }
+  .chip[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+
+  /* Tecles */
+  h2 { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 14px 0 8px; }
+  .keys { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+  .key {
+    min-width: 0; min-height: 70px; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    border-radius: 12px; padding: 6px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; cursor: pointer; font: inherit; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  }
+  .key:active { background: var(--key-press); border-color: var(--accent); }
+  .glyph { font-family: var(--font-math); font-size: 27px; line-height: 1.15; text-align: center; overflow-wrap: anywhere; }
+  .glyph.long { font-size: 19px; }
+  .name { font-size: 12px; color: var(--muted); text-align: center; overflow-wrap: anywhere; line-height: 1.2; }
+  .empty { color: var(--muted); padding: 24px 0; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+    background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 15px; z-index: 20;
+    opacity: 0; pointer-events: none; transition: opacity .15s;
+  }
+  .toast.on { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+  .foot { margin-top: 22px; font-size: 13px; color: var(--muted); max-width: 65ch; }
+
+</style>
+
+<div class="wrap">
+  <div class="composer">
+    <div class="compose-card">
+      <div class="compose-head">
+        <div class="brand-lockup"><svg class="brand-icon" viewBox="0 0 512 512" aria-hidden="true">
+  <rect width="512" height="512" rx="120" fill="#100d27"/>
+  <circle cx="387" cy="109" r="34" fill="#3fe4d2"/>
+  <circle cx="419" cy="165" r="20" fill="#3fe4d2"/>
+  <circle cx="338" cy="157" r="17" fill="#3fe4d2"/>
+  <path d="M97 215l12 30 30 12-30 12-12 30-12-30-30-12 30-12z" fill="#ffd84f"/>
+  <path d="M207 103h98v59l69 158c18 41-6 75-49 75H187c-43 0-67-34-49-75l69-158z" fill="#1b1640" stroke="#fbf8ff" stroke-width="18" stroke-linejoin="round"/>
+  <path d="M160 315c29-22 51 7 82-4 30-11 48 11 75 1 17-6 30-16 42-18l17 39c12 28-4 45-34 45H175c-30 0-46-17-34-45z" fill="#b8f84f"/>
+  <circle cx="219" cy="290" r="10" fill="#3fe4d2"/><circle cx="263" cy="270" r="7" fill="#ff61c7"/><circle cx="306" cy="287" r="9" fill="#3fe4d2"/>
+  <path d="M69 282c53-86 321-86 374 0-53 86-321 86-374 0z" fill="none" stroke="#ff61c7" stroke-width="20" stroke-linecap="round"/>
+  <circle cx="432" cy="282" r="17" fill="#ff61c7"/>
+</svg><div class="brand-copy"><h1>Teclat LaTeX</h1><p class="brand-tag">Laboratori d’expressions · mode boig</p></div></div>
+        <div class="top-actions"><button type="button" class="btn install" id="bInstall">Instal·la</button>
+        <div class="seg" role="group" aria-label="Mode de vista prèvia">
+          <button type="button" id="mBloc" aria-pressed="true">Vista en bloc</button>
+          <button type="button" id="mInline" aria-pressed="false">Vista en línia</button>
+        </div></div>
+      </div>
+      <textarea id="ta" rows="3" inputmode="none" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Fórmula en LaTeX"></textarea>
+      <div class="preview" id="pv" aria-live="polite" aria-label="Vista prèvia de la fórmula"><span class="ph">Carregant la vista prèvia…</span></div>
+      <div class="actions">
+        <button type="button" class="btn" id="bLeft" aria-label="Cursor a l'esquerra">◀</button>
+        <button type="button" class="btn" id="bRight" aria-label="Cursor a la dreta">▶</button>
+        <button type="button" class="btn" id="bBack" aria-label="Esborra un caràcter">⌫</button>
+        <button type="button" class="btn" id="bSpace" aria-label="Espai">␣</button>
+        <button type="button" class="btn" id="bEnter" aria-label="Intro: salt de línia">↵</button>
+        <button type="button" class="btn" id="bClear">Esborra</button>
+        <button type="button" class="btn" id="bKb" aria-pressed="false" title="Mostra el teclat del sistema per a escriure a mà">⌨</button>
+        <button type="button" class="btn primary" id="bCopy">Copia</button>
+      </div>
+      <section class="integration" aria-label="Preparació per a altres aplicacions">
+        <label for="destination">Prepara la fórmula per a
+          <select id="destination">
+            <option value="gamma-block">Gamma · equació en bloc</option>
+            <option value="gamma-inline">Gamma · equació en línia</option>
+            <option value="office">Microsoft Word / PowerPoint</option>
+            <option value="markdown-block">Markdown · bloc</option>
+            <option value="markdown-inline">Markdown · en línia</option>
+            <option value="latex">LaTeX sense delimitadors</option>
+          </select>
+        </label>
+        <div class="integration-actions">
+          <button type="button" class="btn" id="bShare">Compartix</button>
+          <button type="button" class="btn" id="bDownload">Baixa .tex</button>
+        </div>
+        <p class="integration-note" id="destinationNote"></p>
+        <output class="output-preview" id="outputPreview" aria-label="Text que es copiarà"></output>
+      </section>
+      <p class="hint" id="hint">Això és un exemple. Toca Esborra per començar.</p>
+    </div>
+    <input id="q" type="search" placeholder="Cerca: fracció, alfa, integral, vector…" aria-label="Cerca un símbol">
+    <div class="tabs" id="tabs" role="tablist" aria-label="Categories"></div>
+  </div>
+
+  <div id="out"></div>
+  <p class="foot">Toca una tecla per afegir-la a la fórmula. Tria una destinació per a copiar el format adequat i consulta les instruccions abans d’enganxar. En iPad, pots obrir Compartix per a enviar el text a una altra app. També pots baixar un fitxer .tex. L’editor es pot instal·lar com a PWA quan estiga allotjat en HTTPS; sense connexió funcionen l’edició, la cerca i la còpia. La vista prèvia matemàtica necessita connexió.</p>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  window.MathJax = {
+    tex: { formatError: function (jax, err) { throw err; } },
+    svg: { fontCache: 'local' },
+    options: { enableMenu: false },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>
+<script>
+(function () {
+  var R = String.raw;
+  // [vista prèvia, codi LaTeX (¦ = lloc del cursor), nom]
+  var CATS = [
+    { id: 'estructura', name: 'Estructura', items: [
+      ['a⁄b', R`\frac{¦}{}`, 'fracció'],
+      ['a⁄b', R`\dfrac{¦}{}`, 'fracció gran'],
+      ['√', R`\sqrt{¦}`, 'arrel'],
+      ['ⁿ√', R`\sqrt[¦]{}`, 'arrel n'],
+      ['xⁿ', R`^{¦}`, 'exponent'],
+      ['xₙ', R`_{¦}`, 'subíndex'],
+      ['xₙⁿ', R`_{¦}^{}`, 'sub i exp'],
+      ['( )', R`\left(¦\right)`, 'parèntesis'],
+      ['[ ]', R`\left[¦\right]`, 'claudàtors'],
+      ['{ }', R`\left\{¦\right\}`, 'claus'],
+      ['| |', R`\left|¦\right|`, 'valor absolut'],
+      ['‖ ‖', R`\left\|¦\right\|`, 'norma'],
+      ['Abc', R`\text{¦}`, 'text'],
+      ['x̄', R`\overline{¦}`, 'barra'],
+      ['x⃗', R`\vec{¦}`, 'vector'],
+      ['x̂', R`\hat{¦}`, 'capell'],
+      ['ẋ', R`\dot{¦}`, 'punt'],
+      ['ẍ', R`\ddot{¦}`, 'doble punt'],
+      ['(n k)', R`\binom{¦}{}`, 'binomial']
+    ]},
+    { id: 'espais', name: 'Espais i línies', items: [
+      ['·', R`\,`, 'espai fi'],
+      ['··', R`\:`, 'espai mitjà'],
+      ['···', R`\;`, 'espai gruixut'],
+      ['⎵', R`\ `, 'espai normal'],
+      ['⎵⎵', R`\quad `, 'espai d\'1 em'],
+      ['⎵⎵⎵⎵', R`\qquad `, 'espai de 2 em'],
+      ['⇥⇤', R`\!`, 'espai negatiu'],
+      ['↵', '\\\\\n', 'salt de línia'],
+      ['&', R`&`, 'alinea ací'],
+      ['{ }', R`{}`, 'grup buit'],
+      ['☐', R`\phantom{¦}`, 'espai invisible'],
+      ['=', R`\begin{aligned} ¦ &= \\ &= \end{aligned}`, 'línies alineades'],
+      ['≡', R`\begin{gathered} ¦ \\ \end{gathered}`, 'línies centrades']
+    ]},
+    { id: 'format', name: 'Format', items: [
+      ['x', R`\mathbf{¦}`, 'negreta', 'font-weight:700'],
+      ['x', R`\mathit{¦}`, 'cursiva', 'font-style:italic'],
+      ['x', R`\mathrm{¦}`, 'recte (unitats)'],
+      ['ℝ', R`\mathbb{¦}`, 'doble barra'],
+      ['ℒ', R`\mathcal{¦}`, 'cal·ligràfica'],
+      ['A', R`\mathsf{¦}`, 'sense serif', 'font-family:sans-serif'],
+      ['A', R`\mathtt{¦}`, 'màquina d\'escriure', 'font-family:monospace;font-size:23px'],
+      ['α', R`\boldsymbol{¦}`, 'negreta grega', 'font-weight:700'],
+      ['Abc', R`\text{¦}`, 'text'],
+      ['Abc', R`\textbf{¦}`, 'text en negreta', 'font-weight:700'],
+      ['Abc', R`\textit{¦}`, 'text en cursiva', 'font-style:italic'],
+      ['▭', R`\boxed{¦}`, 'requadre'],
+      ['x̲', R`\underline{¦}`, 'subratllat'],
+      ['x̶', R`\cancel{¦}`, 'ratllat'],
+      ['⏟', R`\underbrace{¦}_{}`, 'clau davall'],
+      ['⏞', R`\overbrace{¦}^{}`, 'clau damunt'],
+      ['A', R`{\color{red} ¦}`, 'roig', 'color:#D94B4B'],
+      ['A', R`{\color{blue} ¦}`, 'blau', 'color:#3F8FE0'],
+      ['A', R`{\color{green} ¦}`, 'verd', 'color:#2E9E5B'],
+      ['A', R`{\color{orange} ¦}`, 'taronja', 'color:#E58A1F']
+    ]},
+    { id: 'mida', name: 'Mida', items: [
+      ['A', R`{\tiny ¦}`, 'mínima', 'font-size:11px'],
+      ['A', R`{\scriptsize ¦}`, 'molt menuda', 'font-size:14px'],
+      ['A', R`{\footnotesize ¦}`, 'menuda', 'font-size:16px'],
+      ['A', R`{\small ¦}`, 'xicoteta', 'font-size:19px'],
+      ['A', R`{\normalsize ¦}`, 'normal', 'font-size:22px'],
+      ['A', R`{\large ¦}`, 'gran', 'font-size:26px'],
+      ['A', R`{\Large ¦}`, 'més gran', 'font-size:30px'],
+      ['A', R`{\LARGE ¦}`, 'molt gran', 'font-size:34px'],
+      ['A', R`{\huge ¦}`, 'enorme', 'font-size:38px'],
+      ['∑', R`\displaystyle `, 'estil gran'],
+      ['∑', R`\textstyle `, 'estil en línia'],
+      ['x²', R`\scriptstyle `, 'estil petit'],
+      ['x²', R`\scriptscriptstyle `, 'estil mínim']
+    ]},
+    { id: 'grec', name: 'Grec', items: [
+      ['α', R`\alpha`, 'alfa'], ['β', R`\beta`, 'beta'], ['γ', R`\gamma`, 'gamma'], ['δ', R`\delta`, 'delta'],
+      ['ε', R`\varepsilon`, 'èpsilon'], ['ζ', R`\zeta`, 'zeta'], ['η', R`\eta`, 'eta'], ['θ', R`\theta`, 'theta'],
+      ['ι', R`\iota`, 'iota'], ['κ', R`\kappa`, 'kappa'], ['λ', R`\lambda`, 'lambda'], ['μ', R`\mu`, 'mu'],
+      ['ν', R`\nu`, 'nu'], ['ξ', R`\xi`, 'xi'], ['π', R`\pi`, 'pi'], ['ρ', R`\rho`, 'rho'],
+      ['σ', R`\sigma`, 'sigma'], ['τ', R`\tau`, 'tau'], ['φ', R`\varphi`, 'fi'], ['χ', R`\chi`, 'khi'],
+      ['ψ', R`\psi`, 'psi'], ['ω', R`\omega`, 'omega']
+    ]},
+    { id: 'grecmaj', name: 'Grec majús.', items: [
+      ['Γ', R`\Gamma`, 'gamma majús.'], ['Δ', R`\Delta`, 'delta majús.'], ['Θ', R`\Theta`, 'theta majús.'],
+      ['Λ', R`\Lambda`, 'lambda majús.'], ['Ξ', R`\Xi`, 'xi majús.'], ['Π', R`\Pi`, 'pi majús.'],
+      ['Σ', R`\Sigma`, 'sigma majús.'], ['Φ', R`\Phi`, 'fi majús.'], ['Ψ', R`\Psi`, 'psi majús.'],
+      ['Ω', R`\Omega`, 'omega majús.']
+    ]},
+    { id: 'operadors', name: 'Operadors', items: [
+      ['±', R`\pm`, 'més-menys'], ['∓', R`\mp`, 'menys-més'], ['×', R`\times`, 'per (creu)'], ['÷', R`\div`, 'dividit'],
+      ['·', R`\cdot`, 'punt mitjà'], ['∘', R`\circ`, 'composició'], ['⊕', R`\oplus`, 'suma directa'], ['⊗', R`\otimes`, 'producte tensorial'],
+      ['∑', R`\sum_{¦}^{}`, 'sumatori'], ['∏', R`\prod_{¦}^{}`, 'productori'], ['∫', R`\int_{¦}^{}`, 'integral'],
+      ['∬', R`\iint`, 'integral doble'], ['∮', R`\oint`, 'integral tancada'], ['∂', R`\partial`, 'derivada parcial'],
+      ['∇', R`\nabla`, 'nabla'], ['∞', R`\infty`, 'infinit'], ['…', R`\ldots`, 'punts baixos'], ['⋯', R`\cdots`, 'punts centrals'],
+      ['⋮', R`\vdots`, 'punts verticals'], ['′', R`'`, 'prima'], ['!', R`!`, 'factorial']
+    ]},
+    { id: 'relacions', name: 'Relacions', items: [
+      ['≤', R`\leq`, 'menor o igual'], ['≥', R`\geq`, 'major o igual'], ['≠', R`\neq`, 'diferent'], ['≈', R`\approx`, 'aproximat'],
+      ['≡', R`\equiv`, 'equivalent'], ['∼', R`\sim`, 'semblant'], ['≅', R`\cong`, 'congruent'], ['∝', R`\propto`, 'proporcional'],
+      ['≪', R`\ll`, 'molt menor'], ['≫', R`\gg`, 'molt major'], ['∈', R`\in`, 'pertany'], ['∉', R`\notin`, 'no pertany'],
+      ['⊂', R`\subset`, 'subconjunt'], ['⊆', R`\subseteq`, 'subconjunt o igual'], ['∪', R`\cup`, 'unió'], ['∩', R`\cap`, 'intersecció'],
+      ['∅', R`\emptyset`, 'buit'], ['∀', R`\forall`, 'per a tot'], ['∃', R`\exists`, 'existeix'], ['∴', R`\therefore`, 'per tant'],
+      ['∵', R`\because`, 'perquè'], ['∧', R`\land`, 'i lògic'], ['∨', R`\lor`, 'o lògic'], ['¬', R`\neg`, 'negació'],
+      ['⊥', R`\perp`, 'perpendicular'], ['∥', R`\parallel`, 'paral·lel'], ['∠', R`\angle`, 'angle']
+    ]},
+    { id: 'fletxes', name: 'Fletxes', items: [
+      ['→', R`\rightarrow`, 'dreta'], ['←', R`\leftarrow`, 'esquerra'], ['↔', R`\leftrightarrow`, 'doble sentit'],
+      ['⇒', R`\Rightarrow`, 'implica'], ['⇐', R`\Leftarrow`, 'implicat per'], ['⇔', R`\Leftrightarrow`, 'si i només si'],
+      ['⇌', R`\rightleftharpoons`, 'equilibri'], ['↑', R`\uparrow`, 'amunt'], ['↓', R`\downarrow`, 'avall'],
+      ['↦', R`\mapsto`, 'aplica en'], ['⟶', R`\longrightarrow`, 'dreta llarga'], ['⟹', R`\Longrightarrow`, 'implica llarg'],
+      ['⟶', R`\xrightarrow{¦}`, 'dreta amb text'], ['⇀', R`\rightharpoonup`, 'arpó']
+    ]},
+    { id: 'fisica', name: 'Física', items: [
+      ['F⃗', R`\vec{F}`, 'força'], ['F⃗=ma⃗', R`\vec{F}=m\vec{a}`, 'segona llei'], ['E=mc²', R`E=mc^2`, 'equivalència'],
+      ['Δx', R`\Delta x`, 'increment'], ['dx/dt', R`\frac{d¦}{dt}`, 'derivada temporal'], ['∂/∂x', R`\frac{\partial ¦}{\partial x}`, 'derivada parcial'],
+      ['î ĵ k̂', R`\hat{\imath}, \hat{\jmath}, \hat{k}`, 'versors'], ['a⃗·b⃗', R`\vec{a}\cdot\vec{b}`, 'producte escalar'],
+      ['a⃗×b⃗', R`\vec{a}\times\vec{b}`, 'producte vectorial'], ['×10ⁿ', R`\times 10^{¦}`, 'notació científica'],
+      ['m·s⁻¹', R`\,\mathrm{m\,s^{-1}}`, 'velocitat (unitat)'], ['m·s⁻²', R`\,\mathrm{m\,s^{-2}}`, 'acceleració (unitat)'],
+      ['N', R`\,\mathrm{N}`, 'newton'], ['J', R`\,\mathrm{J}`, 'joule'], ['W', R`\,\mathrm{W}`, 'watt'],
+      ['ℏ', R`\hbar`, 'h barra'], ['ℓ', R`\ell`, 'ela'], ['°', R`^\circ`, 'graus'], ['ε₀', R`\varepsilon_0`, 'permitivitat'],
+      ['μ₀', R`\mu_0`, 'permeabilitat'], ['k_B', R`k_\mathrm{B}`, 'Boltzmann'], ['ΣF⃗', R`\sum \vec{F}`, 'força neta'],
+      ['⟨x⟩', R`\langle ¦ \rangle`, 'valor mitjà'], ['|ψ⟩', R`|\psi\rangle`, 'ket']
+    ]},
+    { id: 'quimica', name: 'Química', items: [
+      ['⇌', R`\rightleftharpoons`, 'equilibri'], ['⟶', R`\xrightarrow{¦}`, 'condicions'], ['↑', R`\uparrow`, 'gas'], ['↓', R`\downarrow`, 'precipitat'],
+      ['H₂O', R`\mathrm{H_2O}`, 'aigua'], ['CO₂', R`\mathrm{CO_2}`, 'diòxid de carboni'], ['SO₄²⁻', R`\mathrm{SO_4^{2-}}`, 'ió sulfat'],
+      ['Na⁺', R`\mathrm{Na^+}`, 'catió'], ['Cl⁻', R`\mathrm{Cl^-}`, 'anió'], ['[H⁺]', R`[\mathrm{H^+}]`, 'concentració'],
+      ['pH', R`\mathrm{pH}`, 'pH'], ['ΔH', R`\Delta H`, 'entalpia'], ['ΔG', R`\Delta G`, 'energia lliure'], ['ΔS', R`\Delta S`, 'entropia'],
+      ['K𝚌', R`K_\mathrm{c}`, 'constant (conc.)'], ['K𝚙', R`K_\mathrm{p}`, 'constant (pres.)'], ['mol/L', R`\mathrm{mol\,L^{-1}}`, 'molaritat'],
+      ['N_A', R`N_\mathrm{A}`, 'Avogadro'], ['ᴬ_Z X', R`{}^{¦}_{}\mathrm{X}`, 'nucli'], ['°C', R`^\circ\mathrm{C}`, 'graus Celsius'],
+      ['kJ/mol', R`\mathrm{kJ\,mol^{-1}}`, 'energia molar'], ['g/mol', R`\mathrm{g\,mol^{-1}}`, 'massa molar']
+    ]},
+    { id: 'calcul', name: 'Càlcul', items: [
+      ['∫ₐᵇ', R`\int_{¦}^{} f(x)\,dx`, 'integral definida'], ['∫', R`\int ¦ \,dx`, 'integral indefinida'],
+      ['∑ᵢ', R`\sum_{i=1}^{¦}`, 'sumatori'], ['lim', R`\lim_{x \to ¦}`, 'límit'], ['x→∞', R`x \to \infty`, 'tendeix a infinit'],
+      ['f′(x)', R`f'(x)`, 'derivada'], ['d/dx', R`\frac{d}{dx}`, 'derivada'], ['dx', R`\,dx`, 'diferencial'],
+      ['sin', R`\sin`, 'sinus'], ['cos', R`\cos`, 'cosinus'], ['tan', R`\tan`, 'tangent'], ['ln', R`\ln`, 'log natural'],
+      ['log', R`\log`, 'logaritme'], ['logₙ', R`\log_{¦}`, 'log en base'], ['eˣ', R`e^{¦}`, 'exponencial'], ['f(x)', R`f(x)`, 'funció'],
+      ['arcsin', R`\arcsin`, 'arcsinus'], ['máx', R`\max`, 'màxim'], ['mín', R`\min`, 'mínim']
+    ]},
+    { id: 'matrius', name: 'Matrius', items: [
+      ['2×2', R`\begin{pmatrix} ¦ & \\ & \end{pmatrix}`, 'matriu 2×2'],
+      ['3×3', R`\begin{pmatrix} ¦ & & \\ & & \\ & & \end{pmatrix}`, 'matriu 3×3'],
+      ['|A|', R`\begin{vmatrix} ¦ & \\ & \end{vmatrix}`, 'determinant 2×2'],
+      ['{', R`\begin{cases} ¦ & \text{si } \\ & \text{si } \end{cases}`, 'a trossos'],
+      ['⎰', R`\begin{cases} ¦ \\ \end{cases}`, 'sistema'],
+      ['=', R`\begin{aligned} ¦ &= \\ &= \end{aligned}`, 'alineades'],
+      ['(a b)', R`\begin{pmatrix} ¦ & \end{pmatrix}`, 'vector fila'],
+      ['(a/b)', R`\begin{pmatrix} ¦ \\ \end{pmatrix}`, 'vector columna']
+    ]}
+  ];
+
+  var ta = document.getElementById('ta');
+  var out = document.getElementById('out');
+  var tabs = document.getElementById('tabs');
+  var q = document.getElementById('q');
+  var hint = document.getElementById('hint');
+  var toastEl = document.getElementById('toast');
+  var mode = 'bloc';
+  var active = CATS[0].id;
+  var exampleOn = true;
+  var KEY = 'teclat-latex-esborrany';
+  var toastTimer = null;
+  var destination = document.getElementById('destination');
+  var destinationNote = document.getElementById('destinationNote');
+  var outputPreview = document.getElementById('outputPreview');
+
+  function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('on'); }, 1400);
+  }
+
+  function clearExample() {
+    if (exampleOn) { exampleOn = false; hint.textContent = ''; }
+  }
+
+  var pv = document.getElementById('pv');
+  var pvTok = 0;
+  var pvNode = null;
+  var pvWarn = null;
+
+  function showPlaceholder(msg) {
+    pv.textContent = '';
+    pvNode = null;
+    var s = document.createElement('span');
+    s.className = 'ph';
+    s.textContent = msg;
+    pv.appendChild(s);
+  }
+
+  // La vista prèvia usa MathJax, que no coneix \large, \small…: els convertim a una mida en %.
+  var SIZES = { tiny: 50, scriptsize: 70, footnotesize: 80, small: 90, normalsize: 100, large: 120, Large: 144, LARGE: 173, huge: 207, Huge: 249 };
+  function previewTex(src) {
+    var out = '', opens = [0], d = 0, i = 0, n = src.length;
+    while (i < n) {
+      var c = src[i];
+      if (c === '\\') {
+        var j = i + 1;
+        if (j < n && /[A-Za-z]/.test(src[j])) { while (j < n && /[A-Za-z]/.test(src[j])) j++; }
+        else { j = Math.min(n, j + 1); }
+        var cmd = src.slice(i + 1, j);
+        if (Object.prototype.hasOwnProperty.call(SIZES, cmd)) { out += '\\style{font-size:' + SIZES[cmd] + '%}{'; opens[d]++; }
+        else { out += src.slice(i, j); }
+        i = j; continue;
+      }
+      if (c === '{') { d++; opens[d] = 0; out += c; }
+      else if (c === '}') {
+        if (d > 0) { while (opens[d] > 0) { out += '}'; opens[d]--; } d--; }
+        out += c;
+      } else { out += c; }
+      i++;
+    }
+    while (d >= 0) { while (opens[d] > 0) { out += '}'; opens[d]--; } d--; }
+    if (/\\\\/.test(out) && !/\\begin\{/.test(out)) out = '\\begin{gathered}' + out + '\\end{gathered}';
+    return out;
+  }
+
+  function updatePreview() {
+    var tok = ++pvTok;
+    var v = ta.value.trim();
+    if (!v) { showPlaceholder('Toca una tecla i aquí veuràs la fórmula.'); return; }
+    var M = window.MathJax;
+    if (!M || !M.startup || !M.startup.promise) { showPlaceholder('Vista prèvia sense connexió. La fórmula i les opcions de còpia continuen disponibles.'); return; }
+    M.startup.promise.then(function () {
+      return M.tex2svgPromise(previewTex(v), { display: mode === 'bloc' });
+    }).then(function (node) {
+      if (tok !== pvTok) return;
+      pv.textContent = '';
+      pv.appendChild(node);
+      pvNode = node;
+    }).catch(function () {
+      if (tok !== pvTok) return;
+      if (!pvNode) { showPlaceholder('No es pot representar encara. Revisa les claus; el codi es conserva i es pot copiar.'); return; }
+      if (!pvWarn || !pvWarn.parentNode) {
+        pvWarn = document.createElement('span');
+        pvWarn.className = 'warn';
+        pvWarn.textContent = 'Codi incomplet. Es mostra l\'última versió correcta.';
+        pv.appendChild(pvWarn);
+      }
+    });
+  }
+
+  function save() {
+    try { localStorage.setItem(KEY, ta.value); } catch (e) {}
+    updatePreview();
+    refreshDestination();
+  }
+
+  function insert(code) {
+    clearExample();
+    var s = ta.selectionStart, e = ta.selectionEnd;
+    var caret = code.indexOf('¦');
+    var text = code.replace('¦', '');
+    var before = ta.value.slice(0, s);
+    var pad = 0;
+    if (/\\[A-Za-z]+$/.test(before) && /^[A-Za-z]/.test(text)) { text = ' ' + text; pad = 1; }
+    ta.setRangeText(text, s, e, 'end');
+    if (caret >= 0) {
+      var pos = s + pad + caret;
+      ta.setSelectionRange(pos, pos);
+    }
+    try { ta.focus({ preventScroll: true }); } catch (err) { ta.focus(); }
+    save();
+  }
+
+  function keyButton(item) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'key';
+    b.title = item[1].replace('¦', '');
+    b.setAttribute('aria-label', item[2]);
+    var g = document.createElement('span');
+    g.className = 'glyph' + (item[0].length > 4 ? ' long' : '');
+    g.textContent = item[0];
+    if (item[3]) g.style.cssText = item[3];
+    var n = document.createElement('span');
+    n.className = 'name';
+    n.textContent = item[2];
+    b.appendChild(g); b.appendChild(n);
+    b.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+    b.addEventListener('click', function () { insert(item[1]); });
+    return b;
+  }
+
+  function renderGrid(title, items) {
+    var frag = document.createDocumentFragment();
+    var h = document.createElement('h2');
+    h.textContent = title;
+    frag.appendChild(h);
+    if (!items.length) {
+      var p = document.createElement('p');
+      p.className = 'empty';
+      p.textContent = 'No hi ha cap símbol amb aquest nom. Prova amb un altre mot.';
+      frag.appendChild(p);
+    } else {
+      var grid = document.createElement('div');
+      grid.className = 'keys';
+      items.forEach(function (it) { grid.appendChild(keyButton(it)); });
+      frag.appendChild(grid);
+    }
+    return frag;
+  }
+
+  function render() {
+    out.textContent = '';
+    var term = norm(q.value.trim());
+    if (term) {
+      var res = [];
+      CATS.forEach(function (c) {
+        c.items.forEach(function (it) {
+          if (norm(it[2]).indexOf(term) !== -1 || norm(it[1]).indexOf(term) !== -1) res.push(it);
+        });
+      });
+      out.appendChild(renderGrid('Resultats', res));
+    } else {
+      var cat = CATS.filter(function (c) { return c.id === active; })[0];
+      out.appendChild(renderGrid(cat.name, cat.items));
+    }
+    Array.prototype.forEach.call(tabs.children, function (t) {
+      t.setAttribute('aria-selected', String(t.dataset.id === active && !term));
+    });
+  }
+
+  CATS.forEach(function (c) {
+    var t = document.createElement('button');
+    t.type = 'button';
+    t.className = 'chip';
+    t.setAttribute('role', 'tab');
+    t.dataset.id = c.id;
+    t.textContent = c.name;
+    t.addEventListener('click', function () { active = c.id; q.value = ''; render(); });
+    tabs.appendChild(t);
+  });
+  q.addEventListener('input', render);
+
+  // Redacció
+  var example = String.raw`\frac{-b \pm \sqrt{b^2-4ac}}{2a}`;
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) { ta.value = saved; exampleOn = false; hint.textContent = ''; }
+  else { ta.value = example; }
+  ta.addEventListener('input', function () { clearExample(); save(); });
+
+  function noFocusSteal(id, fn) {
+    var b = document.getElementById(id);
+    b.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+    b.addEventListener('click', fn);
+  }
+  noFocusSteal('bLeft', function () { var p = Math.max(0, ta.selectionStart - 1); ta.setSelectionRange(p, p); ta.focus({ preventScroll: true }); });
+  noFocusSteal('bRight', function () { var p = Math.min(ta.value.length, ta.selectionEnd + 1); ta.setSelectionRange(p, p); ta.focus({ preventScroll: true }); });
+  noFocusSteal('bBack', function () {
+    clearExample();
+    var s = ta.selectionStart, e = ta.selectionEnd;
+    if (s !== e) { ta.setRangeText('', s, e, 'end'); }
+    else if (s > 0) { ta.setRangeText('', s - 1, s, 'end'); }
+    ta.focus({ preventScroll: true }); save();
+  });
+  noFocusSteal('bSpace', function () { insert('\\ '); });
+  noFocusSteal('bEnter', function () { insert('\\\\\n'); });
+  noFocusSteal('bClear', function () { clearExample(); ta.value = ''; save(); ta.focus({ preventScroll: true }); });
+
+  var kb = document.getElementById('bKb');
+  kb.addEventListener('click', function () {
+    var on = kb.getAttribute('aria-pressed') !== 'true';
+    kb.setAttribute('aria-pressed', String(on));
+    ta.setAttribute('inputmode', on ? 'text' : 'none');
+    ta.blur(); ta.focus({ preventScroll: true });
+  });
+
+  var mBloc = document.getElementById('mBloc'), mInline = document.getElementById('mInline');
+  function setMode(m) {
+    mode = m;
+    mBloc.setAttribute('aria-pressed', String(m === 'bloc'));
+    mInline.setAttribute('aria-pressed', String(m === 'inline'));
+    updatePreview();
+  }
+  mBloc.addEventListener('click', function () { setMode('bloc'); });
+  mInline.addEventListener('click', function () { setMode('inline'); });
+
+  document.getElementById('bCopy').addEventListener('click', function () {
+    var v = ta.value.trim();
+    if (!v) { toast('Encara no hi ha cap fórmula'); return; }
+    var txt = getExportText();
+    function fallback() {
+      var tmp = document.createElement('textarea');
+      tmp.value = txt; tmp.setAttribute('readonly', '');
+      tmp.style.position = 'fixed'; tmp.style.opacity = '0'; tmp.style.top = '0';
+      document.body.appendChild(tmp); tmp.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(tmp);
+      toast(ok ? 'Copiat' : 'No s\'ha pogut copiar. Selecciona el text i copia');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function () { toast('Copiat'); }, fallback);
+    } else { fallback(); }
+  });
+
+  function getExportText() {
+    var v = ta.value.trim();
+    switch (destination.value) {
+      case 'gamma-inline': case 'markdown-inline': return '$' + v + '$';
+      case 'gamma-block': case 'markdown-block': return '$$\n' + v + '\n$$';
+      default: return v;
+    }
+  }
+  function refreshDestination() {
+    var notes = {
+      'gamma-block': 'En Gamma, inserix una equació amb /math i apega el contingut. Si l’editor no interpreta els delimitadors, apega només el codi LaTeX.',
+      'gamma-inline': 'Apega el text en línia en el lloc del cursor. Si Gamma no interpreta els delimitadors, usa /math i apega el codi sense els signes $.',
+      'office': 'En Word o PowerPoint: Inserix > Equació, selecciona l’entrada LaTeX si apareix i apega el codi. Després, convertix-lo a format professional. El comportament pot variar segons la versió.',
+      'markdown-block': 'Per a editors Markdown amb suport matemàtic, apega el bloc delimitat per $$ .',
+      'markdown-inline': 'Per a editors Markdown amb suport matemàtic, apega el text delimitat per $.',
+      'latex': 'Copia el codi LaTeX sense delimitadors per a un editor d’equacions o un document .tex.'
+    };
+    outputPreview.textContent = getExportText() || 'La fórmula apareixerà ací.';
+    destinationNote.textContent = notes[destination.value];
+    document.getElementById('bCopy').textContent = destination.value.indexOf('gamma') === 0 ? 'Copia per a Gamma' : destination.value === 'office' ? 'Copia per a Office' : 'Copia';
+  }
+  destination.addEventListener('change', function () { refreshDestination(); });
+  ta.addEventListener('input', refreshDestination);
+
+  document.getElementById('bShare').addEventListener('click', async function () {
+    var text = getExportText();
+    if (!text.trim()) { toast('Encara no hi ha cap fórmula'); return; }
+    if (navigator.share) {
+      try { await navigator.share({ title: 'Fórmula LaTeX', text: text }); }
+      catch (e) { if (e.name !== 'AbortError') toast('No s’ha pogut obrir el menú de compartir'); }
+    } else {
+      toast('El navegador no oferix compartir directament. Usa Copia i apega-la en l’altra aplicació.');
+    }
+  });
+  document.getElementById('bDownload').addEventListener('click', function () {
+    var text = ta.value.trim();
+    if (!text) { toast('Encara no hi ha cap fórmula'); return; }
+    var blob = new Blob([text + '\n'], {type:'application/x-tex;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = url; a.download = 'formula.tex';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    toast('Fitxer .tex preparat');
+  });
+
+  render();
+  updatePreview();
+  refreshDestination();
+
+  // PWA: works when hosted over HTTPS; the standalone HTML also works without installation.
+  var installPrompt = null;
+  window.addEventListener('beforeinstallprompt', function (event) {
+    event.preventDefault(); installPrompt = event;
+    var b = document.getElementById('bInstall'); if (b) b.style.display = 'inline-flex';
+  });
+  var installButton = document.getElementById('bInstall');
+  if (installButton) installButton.addEventListener('click', async function () {
+    if (!installPrompt) { toast('En Safari: Compartix > Afig a la pantalla d’inici'); return; }
+    installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; installButton.style.display = 'none';
+  });
+  if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+    window.addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js').catch(function(){}); });
+  }
+})();
+</script>
+
+</body></html>
