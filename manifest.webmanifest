@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "Teclat LaTeX · Editor científic",
+  "short_name": "Teclat LaTeX",
+  "description": "Editor de fórmules científiques amb eixida preparada per a Gamma, Microsoft Office i Markdown.",
+  "lang": "ca",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#100D27",
+  "background_color": "#100D27",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
